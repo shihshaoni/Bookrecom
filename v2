@@ -1,0 +1,110 @@
+#include <cs50.h>
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#include <stdlib.h>
+
+// def a new struct called 'db'
+typedef struct
+{
+    string category;
+    string recom;
+} db;
+
+// tell the compiler those funcs will be defined later
+db* initializeBooklist(void);
+int lookUp(db booklist[], int size);
+int update(db booklist[], int size);
+int delete(db booklist[], int size);
+
+int main(void)
+{
+    db*
+    booklist = initializeBooklist();
+    lookUp(booklist, 4);
+    update(booklist, 4);
+    delete(booklist, 4);
+    // free(booklist);  // release the memory
+}
+
+db* initializeBooklist(void) // 'db*' returns a pointer point to the db,
+// allowing other funcs to use the db via this pointer.
+{
+    static db booklist[4]; // 宣告一個靜態db類型的數組booklist，包含四個 db 結構。
+    // 靜態數組的特點是其在函式調用結束後不會被釋放，其內容會在整個程序執行期間持續存在。
+
+    booklist[0].category = "literature";
+    booklist[0].recom = "pride and prejudice";
+
+    booklist[1].category = "science";
+    booklist[1].recom = "our mathematical universe";
+
+    booklist[2].category = "finance";
+    booklist[2].recom = "a random walk down wall street";
+
+    booklist[3].category = "start-up";
+    booklist[3].recom = "zero to one";
+    return booklist;
+}
+
+
+int lookUp(db booklist[], int size)
+{
+    string cate = get_string
+    ("Which category are you looking for? Literature, Science, Finance, or Start-up?\n");
+
+    // turn the input into lowercase
+    for (int i = 0; cate[i]; i++){
+    cate[i] = tolower(cate[i]);
+    }
+
+    // compare the user input and the value in booklist
+    for (int i = 0; i < size; i++)
+    {
+        if (strcmp(booklist[i].category, cate) == 0)
+        {
+            printf("The recommendation for you is %s!\nEnjoy!\n", booklist[i].recom);
+            return 0;
+        }
+    }
+    printf("Sorry, we do not have this category.\n");
+    return 1;
+}
+
+
+int update(db booklist[], int size)
+{
+    string ed_cate = get_string("Which category of recommendation you want to edit?\n");
+    string alt = get_string("What book you want to change to?\n");
+    for (int i = 0; i < size; i++)
+    {
+        if (strcmp(booklist[i].category, ed_cate) == 0)
+        {
+            booklist[i].recom = alt;
+            printf("Change to %s, Done!\n", booklist[i].recom);
+            return 0;
+        }
+    }
+    printf("Failed to update.\n");
+    return 1;
+}
+
+int delete(db booklist[], int size)
+{
+    string bookToDel = get_string("Which book do you want to delete?\n");
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; bookToDel[j]; j++){
+            bookToDel[j] = tolower(bookToDel[j]);
+        }
+
+        if (strcmp(booklist[i].recom, bookToDel) == 0)
+        {
+            booklist[i].recom = " ";
+            printf("%s is deleted.\n", bookToDel);
+            return 0;
+        }
+    }
+    printf("Failed to delete %s.\n", bookToDel);
+    return 1;
+}
